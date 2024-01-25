@@ -139,14 +139,19 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
+    
+    float volume = apvts.getRawParameterValue("Volume")->load();
+    
     // Make sure to reset the state if your inner loop is processing
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
+    for (int channel = 0; channel < totalNumInputChannels; ++channel) {
         auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
+        for (auto i = 0; i < buffer.getNumSamples(); i++) {
+            channelData[i] = channelData[i] * volume;
+        }
+//        juce::ignoreUnused (channelData);
         // ..do something to the data...
     }
 }
@@ -159,7 +164,8 @@ bool PluginProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* PluginProcessor::createEditor()
 {
-    return new PluginEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
+//    return new PluginEditor (*this);
 }
 
 //==============================================================================
@@ -176,6 +182,14 @@ void PluginProcessor::setStateInformation (const void* data, int sizeInBytes)
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
     juce::ignoreUnused (data, sizeInBytes);
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParameterLayout() {
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+    
+    layout.add(std::make_unique<juce::AudioParameterFloat>("Volume", "Volume", juce::NormalisableRange<float>(0.0f, 1.0f), 1.0f));
+    
+    return layout;
 }
 
 //==============================================================================

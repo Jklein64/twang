@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FILTERGRAPH>
+  <FILTER uid="8" x="0.42875" y="0.2827868852459016" useARA="0" uiLastX_Normal="202"
+          uiLastY_Normal="38" uiopen_Normal="1">
+    <PLUGIN name="AUAudioFilePlayer" format="AudioUnit" category="Generator"
+            manufacturer="Apple" version="1.6.0" file="AudioUnit:Generators/augn,afpl,appl"
+            uniqueId="6163676e" isInstrument="0" fileTime="0" infoUpdateTime="18d3d55ca09"
+            numInputs="0" numOutputs="2" isShell="0" hasARAExtension="0"
+            uid="6163676e"/>
+    <STATE>541.hAGaoMGcv.C1AHv.DTfAGfPBJr.Gc3wGgvUag4VclE1XzUmbkIGUjEFcg8EDarVPUAkbkMWYzAUYxMWZyQWYtQ2TzEFcksTY4c0b0IFc4AWYWYWYxMWZu4FUzkGbk8EDOXVZrUVKxUlYkIWYtMVYyQkag0VYRDFbvwFPgxvzM3vCPDQFXYTZrUlSg0VYWIUYmk1atMmWIM2TkwVYiQWYjYTZrU1WP7xKUMWYxM2KpE1bu41KDU1bqQ2av8BY44VXh8FduDlagwVdyk1buDVcjk1atbWX1EpDTOAEUXwEXjgFdIUYmk1atQzakMGSu8FbZIUYmk1atQTXzE1WP.QRyMUYrU1XzUFYRU1Yo8laZIUYmk1at4TXsUFBOAAb............Sey...F...................13FED...........P.BL.AEXvAHjfBKvPCN7P...............................................v+++8+..........PYtwC.+++6+kfVNU1cfHUYmk1atkfDgYFbrAA.RDVcm4Vzf.gUFkFakARLXUkazkFcrUFY.f..Y.fI.rB.IAPT.jE.dA.b.TG.5Avd.zG.DBPi.TI.jBf0.fM.gC.7.re.NDPFAnQ.MFfiAjY.ZFvmADZ.lFPpA.K.......f.A.........fH..................P.4B</STATE>
+    <LAYOUT>
+      <INPUTS/>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="9" x="0.49" y="0.7254098360655737" useARA="0">
+    <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="724248cb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="1"
+            numOutputs="0" isShell="0" hasARAExtension="0" uid="724248cb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="C"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="10" x="0.36125" y="0.4918032786885246" useARA="0" uiLastX_Normal="129"
+          uiLastY_Normal="398" uiopen_Normal="1">
+    <PLUGIN name="Twang" format="AudioUnit" category="Effect" manufacturer="Jason Klein"
+            version="0.0.1" file="AudioUnit:Effects/aufx,T001,Twng" uniqueId="6132382e"
+            isInstrument="0" fileTime="0" infoUpdateTime="18d3d55ca0a" numInputs="2"
+            numOutputs="2" isShell="0" hasARAExtension="0" uid="6132382e"/>
+    <STATE>146.hAGaoMGcv.S0AHv.DTfAGfPBJvUag4VclE1XzUmbkIGUjEFcgQEc4AWYWMWchQWdvU1U1Ulbyk1atIAU241YOAQF.....X....fU.7F.rAPc.zF.kA....3O+KQX0YFdRPELvDCDAfvDfThJxnyOaAVY........AD..........K....................bF</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <CONNECTION srcFilter="8" srcChannel="1" dstFilter="10" dstChannel="1"/>
+  <CONNECTION srcFilter="10" srcChannel="1" dstFilter="9" dstChannel="0"/>
+</FILTERGRAPH>
