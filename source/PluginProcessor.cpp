@@ -141,22 +141,8 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // audio processing...
 
     float volume = apvts.getRawParameterValue ("Volume")->load();
-    DBG ("banana!");
-
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-        for (auto i = 0; i < buffer.getNumSamples(); i++)
-        {
-            channelData[i] = channelData[i] * volume;
-        }
-        //        juce::ignoreUnused (channelData);
-        // ..do something to the data...
-    }
+    juce::dsp::AudioBlock<float> block (buffer);
+    block.multiplyBy (volume);
 }
 
 //==============================================================================
@@ -168,7 +154,7 @@ bool PluginProcessor::hasEditor() const
 juce::AudioProcessorEditor* PluginProcessor::createEditor()
 {
     return new juce::GenericAudioProcessorEditor (*this);
-    //    return new PluginEditor (*this);
+    // return new PluginEditor (*this);
 }
 
 //==============================================================================
