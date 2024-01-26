@@ -17,6 +17,36 @@
         "clear": true,
         "close": true
       }
+    },
+    {
+      "label": "Compile tests",
+      "options": {
+        "cwd": "${workspaceRoot}/build"
+      },
+      "command": "make",
+      "args": ["Tests"],
+      "type": "process",
+      "group": "test",
+      "presentation": {
+        "reveal": "silent",
+        "echo": true,
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true,
+        "close": true
+      }
+    },
+    {
+      "label": "Run tests",
+      "options": {
+        "cwd": "${workspaceRoot}/build"
+      },
+      "type": "process",
+      "command": "make",
+      "args": ["test"],
+      "problemMatcher": [],
+      "dependsOn": "Compile tests"
     }
   ]
 }
