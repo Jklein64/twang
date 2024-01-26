@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build AU plugin",
+      "command": "cmake",
+      "args": ["--build", "${workspaceRoot}/build", "--target", "twang_AU"],
+      "type": "process",
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "echo": true,
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true,
+        "close": true
+      }
+    }
+  ]
+}
