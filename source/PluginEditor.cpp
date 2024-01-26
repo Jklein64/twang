@@ -1,4 +1,5 @@
 #include "PluginEditor.h"
+#include "Colors.h"
 
 PluginEditor::PluginEditor (PluginProcessor& p)
     : AudioProcessorEditor (&p), processorRef (p)
@@ -30,7 +31,7 @@ PluginEditor::~PluginEditor()
 void PluginEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    g.fillAll (Colors::background);
 
     auto area = getLocalBounds();
     g.setColour (juce::Colours::white);
