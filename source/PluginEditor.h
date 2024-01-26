@@ -1,7 +1,7 @@
 #pragma once
 
-#include "PluginProcessor.h"
 #include "BinaryData.h"
+#include "PluginProcessor.h"
 #include "melatonin_inspector/melatonin_inspector.h"
 
 //==============================================================================
