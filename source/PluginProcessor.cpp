@@ -139,10 +139,6 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
-
-    float volume = apvts.getRawParameterValue ("Volume")->load();
-    juce::dsp::AudioBlock<float> block (buffer);
-    block.multiplyBy (volume);
 }
 
 //==============================================================================
@@ -153,7 +149,6 @@ bool PluginProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* PluginProcessor::createEditor()
 {
-    // return new juce::GenericAudioProcessorEditor (*this);
     return new PluginEditor (*this);
 }
 
@@ -171,15 +166,6 @@ void PluginProcessor::setStateInformation (const void* data, int sizeInBytes)
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
     juce::ignoreUnused (data, sizeInBytes);
-}
-
-juce::AudioProcessorValueTreeState::ParameterLayout PluginProcessor::createParameterLayout()
-{
-    juce::AudioProcessorValueTreeState::ParameterLayout layout;
-
-    layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "Volume", 1 }, "Volume", juce::NormalisableRange<float> (0.0f, 1.0f), 1.0f));
-
-    return layout;
 }
 
 //==============================================================================
