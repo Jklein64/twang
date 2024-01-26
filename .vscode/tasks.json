@@ -19,6 +19,23 @@
       }
     },
     {
+      "label": "Build standalone plugin",
+      "command": "cmake",
+      "args": ["--build", "${workspaceRoot}/build", "--target", "twang_Standalone"],
+      "type": "process",
+      "group": "build",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "echo": true,
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true,
+        "close": true
+      }
+    },
+    {
       "label": "Compile tests",
       "options": {
         "cwd": "${workspaceRoot}/build"

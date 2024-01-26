@@ -6,7 +6,7 @@
   "configurations": [
     {
       "name": "AudioPluginHost",
-      "cwd": ".",
+      "cwd": "${workspaceRoot}",
       "type": "cppdbg",
       "request": "launch",
       "MIMode": "lldb",
@@ -14,6 +14,16 @@
       "preLaunchTask": "Build AU plugin",
       "program": "${workspaceRoot}/juce/extras/AudioPluginHost/Builds/MacOSX/build/Debug/AudioPluginHost.app/Contents/MacOS/AudioPluginHost",
       // not sure why this isn't a default lol
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+    {
+      "name": "Standalone",
+      "cwd": "${workspaceRoot}",
+      "type": "cppdbg",
+      "request": "launch",
+      "MIMode": "lldb",
+      "preLaunchTask": "Build standalone plugin",
+      "program": "${workspaceRoot}/build/twang_artefacts/Debug/Standalone/Twang.app/Contents/MacOS/Twang",
       "internalConsoleOptions": "openOnSessionStart"
     }
   ]
