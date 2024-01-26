@@ -22,6 +22,9 @@ Testing
 
 # IDE config
 .idea
+.vscode/**/*
+!.vscode/launch.json
+!.vscode/tasks.json
 
 # clion cmake builds
 cmake-build-debug
