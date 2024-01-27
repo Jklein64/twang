@@ -1,14 +1,12 @@
 #include "PluginEditor.h"
 #include "Colors.h"
 
-PluginEditor::PluginEditor (PluginProcessor& p)
-    : AudioProcessorEditor (&p), processorRef (p)
+PluginEditor::PluginEditor (PluginProcessor& p) : AudioProcessorEditor (&p), processorRef (p)
 {
     juce::ignoreUnused (processorRef);
 
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
     setSize (400, 300);
+    setResizeLimits (240, 304, 500, 400);
 
     setOpaque (true);
     setResizable (true, true);
