@@ -51,8 +51,7 @@ void PluginEditor::paint (juce::Graphics& g)
 
     w = 136, h = 48;
     auto meterArea = area.withSizeKeepingCentre (w, h);
-    // the 2 is to offset the stroke being in the center instead of edge
-    meterArea.setY (borderArea.getY() + 2 + borderArea.getHeight() - h - 48);
+    meterArea.setY (borderArea.getY() + borderArea.getHeight() - h - 56);
     x = meterArea.getX(), y = meterArea.getY();
     juce::Path leftMeterBar;
     leftMeterBar.startNewSubPath (x, y + 12);
@@ -96,12 +95,39 @@ void PluginEditor::paint (juce::Graphics& g)
     g.setColour (Colors::secondary);
     g.fillPath (centerMeterBar);
 
-    auto noteText = juce::String ("E");
+    auto noteText = juce::String ("D");
+    auto textArea = borderArea
+                        .withTop (borderArea.getY() + 48)
+                        // centers the font a bit better
+                        .withTrimmedLeft (12)
+                        .withHeight (64);
     auto font = twangLookAndFeel.alarmClockFont;
     g.setFont (juce::Font (font));
     g.setFont (96.f); // set size
     g.setColour (Colors::primary);
-    g.drawText (noteText, area.removeFromTop (120), juce::Justification::centred, false);
+    g.drawText (noteText, textArea, juce::Justification::centred, false);
+
+    w = 64, h = 6;
+    juce::Path underline;
+    auto underlineArea = textArea
+                             .withWidth (w)
+                             .withCentre (area.getCentre())
+                             .withTop (textArea.getBottom() + 10)
+                             .withHeight (h);
+    x = underlineArea.getX(), y = underlineArea.getY();
+    underline.startNewSubPath (x + 2, y);
+    underline.lineTo (x + w - 2, y);
+    underline.lineTo (x + w, y + 2);
+    underline.lineTo (x + w - 4, y + h);
+    underline.lineTo (x + 4, y + h);
+    underline.lineTo (x, y + 2);
+    underline.closeSubPath();
+    underline.scaleToFit (x + 2, y + 2, w, h, true);
+    g.setColour (Colors::secondary);
+    g.fillPath (underline);
+    underline.scaleToFit (x, y, w, h, true);
+    g.setColour (Colors::primary);
+    g.fillPath (underline);
 }
 
 void PluginEditor::resized()
