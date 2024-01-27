@@ -46,6 +46,53 @@ void PluginEditor::paint (juce::Graphics& g)
     border.scaleToFit (x, y, w, h, true);
     g.setColour (Colors::primary);
     g.strokePath (border, juce::PathStrokeType (8.0f));
+
+    w = 136, h = 48;
+    auto meterArea = area.withSizeKeepingCentre (w, h);
+    // the 2 is to offset the stroke being in the center instead of edge
+    meterArea.setY (borderArea.getY() + 2 + borderArea.getHeight() - h - 48);
+    x = meterArea.getX(), y = meterArea.getY();
+    juce::Path leftMeterBar;
+    leftMeterBar.startNewSubPath (x, y + 12);
+    leftMeterBar.lineTo (x + 4, y + 8);
+    leftMeterBar.lineTo (x + 8, y + 8);
+    leftMeterBar.lineTo (x + 8, y + 8 + 32);
+    leftMeterBar.lineTo (x + 4, y + 8 + 32);
+    leftMeterBar.lineTo (x, y + 8 + 32 - 4);
+    leftMeterBar.closeSubPath();
+    g.setColour (Colors::secondary);
+    g.fillPath (leftMeterBar);
+
+    juce::Path meterBar;
+    for (int i = 0; i < 7; i++)
+    {
+        if (i == 3)
+            continue;
+        meterBar.addRectangle (x + 16 + i * (16), y + 8, 8, 32);
+        g.setColour (Colors::secondary);
+        g.fillPath (meterBar);
+    }
+
+    juce::Path rightMeterBar;
+    rightMeterBar.startNewSubPath (x + w - 8, y + 8);
+    rightMeterBar.lineTo (x + w - 4, y + 8);
+    rightMeterBar.lineTo (x + w, y + 12);
+    rightMeterBar.lineTo (x + w, y + 8 + 32 - 4);
+    rightMeterBar.lineTo (x + w - 4, y + 8 + 32);
+    rightMeterBar.lineTo (x + w - 8, y + 8 + 32);
+    g.setColour (Colors::secondary);
+    g.fillPath (rightMeterBar);
+
+    juce::Path centerMeterBar;
+    centerMeterBar.startNewSubPath (x + w / 2, y);
+    centerMeterBar.lineTo (x + w / 2 + 4, y + 4);
+    centerMeterBar.lineTo (x + w / 2 + 4, y + h - 4);
+    centerMeterBar.lineTo (x + w / 2, y + h);
+    centerMeterBar.lineTo (x + w / 2 - 4, y + h - 4);
+    centerMeterBar.lineTo (x + w / 2 - 4, y + 4);
+    centerMeterBar.closeSubPath();
+    g.setColour (Colors::secondary);
+    g.fillPath (centerMeterBar);
 }
 
 void PluginEditor::resized()
