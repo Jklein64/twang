@@ -12,10 +12,12 @@ PluginEditor::PluginEditor (PluginProcessor& p)
 
     setOpaque (true);
     setResizable (true, true);
+    setLookAndFeel (&twangLookAndFeel);
 }
 
 PluginEditor::~PluginEditor()
 {
+    setLookAndFeel (nullptr);
 }
 
 void PluginEditor::paint (juce::Graphics& g)
@@ -93,6 +95,13 @@ void PluginEditor::paint (juce::Graphics& g)
     centerMeterBar.closeSubPath();
     g.setColour (Colors::secondary);
     g.fillPath (centerMeterBar);
+
+    auto noteText = juce::String ("E");
+    auto font = twangLookAndFeel.alarmClockFont;
+    g.setFont (juce::Font (font));
+    g.setFont (96.f); // set size
+    g.setColour (Colors::primary);
+    g.drawText (noteText, area.removeFromTop (120), juce::Justification::centred, false);
 }
 
 void PluginEditor::resized()
