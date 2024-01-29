@@ -17,6 +17,8 @@ PluginProcessor::PluginProcessor()
 PluginProcessor::~PluginProcessor()
 {
     fftwf_destroy_plan (fftw.plan);
+    fftwf_free (fftw.in);
+    fftwf_free (fftw.out);
 }
 
 //==============================================================================
@@ -158,6 +160,15 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
     {
         // only compute the fft if there's relevant content
         fftwf_execute_dft_r2c (fftw.plan, fftw.in, fftw.out);
+        for (size_t i = 0; i < n; i++)
+        {
+            // real, complex
+            std::cerr << fftw.out[i][0] << ", " << fftw.out[i][1] << ", ";
+        }
+        std::cerr << std::endl;
+        std::cerr.flush();
+
+        exit (0);
     }
 }
 
