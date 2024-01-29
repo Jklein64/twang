@@ -45,8 +45,10 @@ include(JUCEDefaults)
 # On Github Actions, this is done as a part of actions/checkout
 add_subdirectory(JUCE)
 
-# Add any other modules you want modules here, before the juce_add_plugin call
-# juce_add_module(modules/my_module)
+# both of these need to be here in order for it to work. The FFTW code was 
+# downloaded from the tarball on their website, configured with the command
+# `./configure --enable-float --prefix "$(pwd)/build"`, and built using make.
+# not sure how to make this cross-platform or whatever...
 add_subdirectory(fftw)
 include_directories(fftw/build/include)
 
