@@ -48,6 +48,7 @@ add_subdirectory(JUCE)
 # Add any other modules you want modules here, before the juce_add_plugin call
 # juce_add_module(modules/my_module)
 add_subdirectory(fftw)
+include_directories(fftw/build/include)
 
 # This adds the melatonin inspector module
 add_subdirectory (modules/melatonin_inspector)
@@ -134,6 +135,7 @@ target_link_libraries(SharedCode
     juce_dsp
     juce_gui_basics
     juce_gui_extra
+    fftw3
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags)
