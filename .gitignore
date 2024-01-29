@@ -31,3 +31,7 @@ cmake-build-debug
 cmake-build-release
 cmake-build-relwithdebinfo
 packaging/Output/*
+
+# ignore everything in fftw directory aside from the README with instructions
+fftw
+!fftw/README
