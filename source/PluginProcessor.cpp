@@ -19,6 +19,7 @@ PluginProcessor::~PluginProcessor()
     fftwf_destroy_plan (fftw.plan);
     fftwf_free (fftw.in);
     fftwf_free (fftw.out);
+    fftwf_free (fftw.window);
 }
 
 //==============================================================================
@@ -94,9 +95,14 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     size_t n = (size_t) std::bit_ceil ((uint32_t) samplesPerBlock);
     // initialize in/out block memory
     fftw.in_size = n, fftw.out_size = (n / 2 + 1);
-    fftw.in = (float*) fftwf_malloc (sizeof (float) * n);
-    fftw.out = (fftwf_complex*) fftwf_malloc (sizeof (fftwf_complex) * (n / 2 + 1));
+    fftw.in = (float*) fftwf_malloc (sizeof (float) * fftw.in_size);
+    fftw.out = (fftwf_complex*) fftwf_malloc (sizeof (fftwf_complex) * fftw.out_size);
     fftw.plan = fftwf_plan_dft_r2c_1d ((int) n, fftw.in, fftw.out, FFTW_MEASURE);
+    // create and fill the hann window. weird trick to make it equivalent to scipy sym=False
+    // basically a window of length n with sym=False is the same as one of length n+1 with sym=True,
+    // which is the behavior of this function. allocate/free n+1 memory locations, but only use n
+    fftw.window = (float*) malloc (sizeof (float) * (n + 1));
+    juce::dsp::WindowingFunction<float>::fillWindowingTables (fftw.window, n + 1, juce::dsp::WindowingFunction<float>::hann, false);
 }
 
 void PluginProcessor::releaseResources()
@@ -152,7 +158,7 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
     for (int i = 0; i < n; i++)
     {
         float merged = (leftChannelPointer[i] + rightChannelPointer[i]) / 2;
-        fftw.in[i] = merged;
+        fftw.in[i] = fftw.window[i] * merged;
         rms += merged;
     }
 

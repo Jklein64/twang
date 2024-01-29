@@ -46,6 +46,7 @@ private:
     {
         fftwf_plan plan;
         float* in;
+        float* window;
         fftwf_complex* out;
         size_t in_size, out_size;
     } fftw;
