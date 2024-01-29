@@ -141,22 +141,30 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    juce::dsp::AudioBlock<float> block (buffer);
-    // auto leftBlock = block.getSingleChannelBlock (0);
-    // auto rightBlock = block.getSingleChannelBlock (1);
-
-    float* leftChannelPointer = block.getChannelPointer (0);
-    float* rightChannelPointer = block.getChannelPointer (1);
+    const int n = buffer.getNumSamples();
+    float rms; // if small, then likely not actually playing
+    const float* leftChannelPointer = buffer.getReadPointer (0);
+    const float* rightChannelPointer = buffer.getReadPointer (1);
     // merge stereo into mono: https://www.dsprelated.com/showthread/comp.dsp/106421-1.php
-    for (size_t i = 0; i < block.getNumSamples(); i++)
-        fftw.in[i] = (leftChannelPointer[i] + rightChannelPointer[i]) / 2;
-    fftwf_execute_dft_r2c (fftw.plan, fftw.in, fftw.out);
+    for (int i = 0; i < n; i++)
+    {
+        float merged = (leftChannelPointer[i] + rightChannelPointer[i]) / 2;
+        fftw.in[i] = merged;
+        rms += merged;
+    }
+
+    rms = std::sqrtf (rms / n);
+    if (rms >= 1e-4)
+    {
+        // only compute the fft if there's relevant content
+        fftwf_execute_dft_r2c (fftw.plan, fftw.in, fftw.out);
+    }
 }
 
 //==============================================================================
 bool PluginProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true;
 }
 
 juce::AudioProcessorEditor* PluginProcessor::createEditor()
