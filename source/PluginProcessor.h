@@ -44,8 +44,9 @@ public:
 private:
     struct fftw_data
     {
-        fftw_plan plan;
-        fftw_complex *in, *out;
+        fftwf_plan plan;
+        float* in;
+        fftwf_complex* out;
     } fftw;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)

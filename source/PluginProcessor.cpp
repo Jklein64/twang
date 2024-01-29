@@ -16,7 +16,7 @@ PluginProcessor::PluginProcessor()
 
 PluginProcessor::~PluginProcessor()
 {
-    fftw_destroy_plan (fftw.plan);
+    fftwf_destroy_plan (fftw.plan);
 }
 
 //==============================================================================
@@ -90,7 +90,7 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     juce::ignoreUnused (sampleRate, samplesPerBlock);
     // get the next power of two: https://stackoverflow.com/a/66975605
     int n = std::bit_ceil ((uint32_t) samplesPerBlock);
-    fftw.plan = fftw_plan_dft_1d (n, fftw.in, fftw.out, FFTW_FORWARD, FFTW_MEASURE);
+    fftw.plan = fftwf_plan_dft_r2c_1d (n, fftw.in, fftw.out, FFTW_MEASURE);
 }
 
 void PluginProcessor::releaseResources()
