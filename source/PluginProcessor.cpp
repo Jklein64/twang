@@ -89,8 +89,11 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     juce::ignoreUnused (sampleRate, samplesPerBlock);
     // get the next power of two: https://stackoverflow.com/a/66975605
-    int n = std::bit_ceil ((uint32_t) samplesPerBlock);
-    fftw.plan = fftwf_plan_dft_r2c_1d (n, fftw.in, fftw.out, FFTW_MEASURE);
+    size_t n = (size_t) std::bit_ceil ((uint32_t) samplesPerBlock);
+    // initialize in/out block memory
+    fftw.in = (float*) fftwf_malloc (sizeof (float) * n);
+    fftw.out = (fftwf_complex*) fftwf_malloc (sizeof (fftwf_complex) * (n / 2 + 1));
+    fftw.plan = fftwf_plan_dft_r2c_1d ((int) n, fftw.in, fftw.out, FFTW_MEASURE);
 }
 
 void PluginProcessor::releaseResources()
@@ -139,8 +142,15 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
         buffer.clear (i, 0, buffer.getNumSamples());
 
     juce::dsp::AudioBlock<float> block (buffer);
-    auto leftBlock = block.getSingleChannelBlock (0);
-    auto rightBlock = block.getSingleChannelBlock (1);
+    // auto leftBlock = block.getSingleChannelBlock (0);
+    // auto rightBlock = block.getSingleChannelBlock (1);
+
+    float* leftChannelPointer = block.getChannelPointer (0);
+    float* rightChannelPointer = block.getChannelPointer (1);
+    // merge stereo into mono: https://www.dsprelated.com/showthread/comp.dsp/106421-1.php
+    for (size_t i = 0; i < block.getNumSamples(); i++)
+        fftw.in[i] = (leftChannelPointer[i] + rightChannelPointer[i]) / 2;
+    fftwf_execute_dft_r2c (fftw.plan, fftw.in, fftw.out);
 }
 
 //==============================================================================
