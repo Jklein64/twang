@@ -93,6 +93,7 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     // get the next power of two: https://stackoverflow.com/a/66975605
     size_t n = (size_t) std::bit_ceil ((uint32_t) samplesPerBlock);
     // initialize in/out block memory
+    fftw.in_size = n, fftw.out_size = (n / 2 + 1);
     fftw.in = (float*) fftwf_malloc (sizeof (float) * n);
     fftw.out = (fftwf_complex*) fftwf_malloc (sizeof (fftwf_complex) * (n / 2 + 1));
     fftw.plan = fftwf_plan_dft_r2c_1d ((int) n, fftw.in, fftw.out, FFTW_MEASURE);
@@ -144,7 +145,7 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
         buffer.clear (i, 0, buffer.getNumSamples());
 
     const int n = buffer.getNumSamples();
-    float rms; // if small, then likely not actually playing
+    float rms = 0.0f; // if small, then likely not actually playing
     const float* leftChannelPointer = buffer.getReadPointer (0);
     const float* rightChannelPointer = buffer.getReadPointer (1);
     // merge stereo into mono: https://www.dsprelated.com/showthread/comp.dsp/106421-1.php
@@ -160,15 +161,6 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
     {
         // only compute the fft if there's relevant content
         fftwf_execute_dft_r2c (fftw.plan, fftw.in, fftw.out);
-        for (size_t i = 0; i < n; i++)
-        {
-            // real, complex
-            std::cerr << fftw.out[i][0] << ", " << fftw.out[i][1] << ", ";
-        }
-        std::cerr << std::endl;
-        std::cerr.flush();
-
-        exit (0);
     }
 }
 

@@ -47,6 +47,7 @@ private:
         fftwf_plan plan;
         float* in;
         fftwf_complex* out;
+        size_t in_size, out_size;
     } fftw;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)
