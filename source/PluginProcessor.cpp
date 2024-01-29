@@ -16,6 +16,7 @@ PluginProcessor::PluginProcessor()
 
 PluginProcessor::~PluginProcessor()
 {
+    fftw_destroy_plan (fftw.plan);
 }
 
 //==============================================================================
@@ -86,9 +87,10 @@ void PluginProcessor::changeProgramName (int index, const juce::String& newName)
 //==============================================================================
 void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
     juce::ignoreUnused (sampleRate, samplesPerBlock);
+    // get the next power of two: https://stackoverflow.com/a/66975605
+    int n = std::bit_ceil ((uint32_t) samplesPerBlock);
+    fftw.plan = fftw_plan_dft_1d (n, fftw.in, fftw.out, FFTW_FORWARD, FFTW_MEASURE);
 }
 
 void PluginProcessor::releaseResources()
@@ -119,8 +121,7 @@ bool PluginProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 #endif
 }
 
-void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
-    juce::MidiBuffer& midiMessages)
+void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ignoreUnused (midiMessages);
 
@@ -137,8 +138,9 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
+    juce::dsp::AudioBlock<float> block (buffer);
+    auto leftBlock = block.getSingleChannelBlock (0);
+    auto rightBlock = block.getSingleChannelBlock (1);
 }
 
 //==============================================================================
