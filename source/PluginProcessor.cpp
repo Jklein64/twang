@@ -101,7 +101,7 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     // create and fill the hann window. weird trick to make it equivalent to scipy sym=False
     // basically a window of length n with sym=False is the same as one of length n+1 with sym=True,
     // which is the behavior of this function. allocate/free n+1 memory locations, but only use n
-    fftw.window = (float*) malloc (sizeof (float) * (n + 1));
+    fftw.window = (float*) fftwf_malloc (sizeof (float) * (n + 1));
     juce::dsp::WindowingFunction<float>::fillWindowingTables (fftw.window, n + 1, juce::dsp::WindowingFunction<float>::hann, false);
 }
 
