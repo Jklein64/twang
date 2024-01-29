@@ -4,7 +4,7 @@
     {
       "label": "Build AU plugin",
       "command": "cmake",
-      "args": ["--build", "${workspaceRoot}/build", "--target", "twang_AU"],
+      "args": ["--build", "${workspaceRoot}/build", "--target", "twang_AU", "-j", "10"],
       "type": "process",
       "group": "build",
       "problemMatcher": [],
@@ -21,7 +21,7 @@
     {
       "label": "Build standalone plugin",
       "command": "cmake",
-      "args": ["--build", "${workspaceRoot}/build", "--target", "twang_Standalone"],
+      "args": ["--build", "${workspaceRoot}/build", "--target", "twang_Standalone", "-j", "10"],
       "type": "process",
       "group": "build",
       "problemMatcher": [],
