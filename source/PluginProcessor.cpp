@@ -167,6 +167,14 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
     {
         // only compute the fft if there's relevant content
         fftwf_execute_dft_r2c (fftw.plan, fftw.in, fftw.out);
+
+        // run hps on fftw.out
+
+        // threshold highest peak
+
+        // compare against lookup table
+
+        // update UI
     }
 }
 
