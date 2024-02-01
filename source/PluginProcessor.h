@@ -49,7 +49,6 @@ private:
         fftwf_plan plan;
         std::vector<float> in;
         std::vector<std::complex<float>> out;
-        size_t in_size, out_size;
     } fftw;
 
     float rms;
@@ -57,6 +56,8 @@ private:
     size_t head;
     // hann window
     std::vector<float> window;
+    // magnitude spectrum
+    std::vector<float> spectrum;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)
 };

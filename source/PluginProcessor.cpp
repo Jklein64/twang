@@ -92,10 +92,11 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     size_t n = (size_t) std::bit_ceil ((uint32_t) samplesPerBlock);
     n = std::max ((size_t) 2048, n);
     // initialize in/out block memory
-    fftw.in_size = n;
-    fftw.out_size = (n / 2 + 1);
-    fftw.in.resize (fftw.in_size, 0);
-    fftw.out.resize (fftw.out_size, 0);
+    size_t in_size = n;
+    size_t out_size = (n / 2 + 1);
+    fftw.in.resize (in_size, 0);
+    fftw.out.resize (out_size, 0);
+    spectrum.resize (out_size, 0);
     // see https://stackoverflow.com/a/75561253 and https://www.fftw.org/fftw3_doc/Complex-numbers.html
     fftw.plan = fftwf_plan_dft_r2c_1d ((int) n, fftw.in.data(), reinterpret_cast<fftwf_complex*> (fftw.out.data()), FFTW_MEASURE);
     // create and fill the hann window. weird trick to make it equivalent to scipy sym=False
@@ -157,20 +158,26 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
     for (int i = 0; i < buffer.getNumSamples(); i++)
     {
         // circular buffer full
-        if (head == fftw.in_size)
+        if (head == fftw.in.size())
         {
-            rms = std::sqrtf (rms / fftw.in_size);
+            rms = std::sqrtf (rms / fftw.in.size());
             // circular buffer filled with sound
             if (rms >= 1e-4)
             {
                 // apply windowing function
-                for (size_t j = 0; j < fftw.in_size; j++)
+                for (size_t j = 0; j < fftw.in.size(); j++)
                     fftw.in[j] *= window[j];
 
                 // execute fft
                 fftwf_execute_dft_r2c (fftw.plan, fftw.in.data(), reinterpret_cast<fftwf_complex*> (fftw.out.data()));
 
                 // convert to power spectrum
+                for (size_t j = 0; j < fftw.out.size(); j++)
+                {
+                    float re = fftw.out[j].real();
+                    float im = fftw.out[j].imag();
+                    spectrum[j] = std::sqrtf (re * re + im * im);
+                }
 
                 // run hps on fftw.out
 
