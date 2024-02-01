@@ -63,13 +63,40 @@ namespace Notes
     };
     // clang-format on
 
-    std::string hz_to_note (float frequency)
+    inline std::string hz_to_note (float frequency)
     {
-        auto beg = ALL_NOTES.begin(),
-             end = ALL_NOTES.end();
-        size_t index = std::distance (beg, std::min_element (beg, end, [frequency] (float a, float b) {
-            return std::abs (a - frequency) < std::abs (b - frequency);
-        }));
-        return ALL_NOTES_STRINGS[index];
+        float dist0 = std::abs (ALL_NOTES[0] - frequency),
+              dist1 = std::abs (ALL_NOTES[1] - frequency);
+
+        size_t i_first = dist0 < dist1 ? 0 : 1,
+               i_second = i_first == 0 ? 1 : 0;
+
+        float first = std::min (dist0, dist1),
+              second = std::max (dist0, dist1);
+
+        for (size_t i = 1; i < ALL_NOTES.size(); i++)
+        {
+            float note = ALL_NOTES[i];
+            float distance = std::abs (note - frequency);
+            if (distance < second)
+            {
+                if (distance < first)
+                {
+                    i_second = i_first;
+                    second = first;
+                    i_first = i;
+                    first = distance;
+                }
+                else
+                {
+                    i_second = i;
+                    second = distance;
+                }
+            }
+        }
+
+        printf ("%s (%f), %s (%f)\n", ALL_NOTES_STRINGS[i_first].c_str(), first, ALL_NOTES_STRINGS[i_second].c_str(), second);
+
+        return ALL_NOTES_STRINGS[i_first];
     }
 }

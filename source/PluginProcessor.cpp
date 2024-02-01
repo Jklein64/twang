@@ -196,7 +196,7 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
                 float frequency = ((float) peak) / fft_size * sample_rate / 2;
 
                 // compare against lookup table
-                DBG (Notes::hz_to_note (frequency));
+                Notes::hz_to_note (frequency);
 
                 // update UI
             }
