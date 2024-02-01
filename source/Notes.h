@@ -5,7 +5,11 @@
 
 namespace Notes
 {
-    const float C1 = 32.70f, Db1 = 34.65f, D1 = 36.71f, Eb1 = 38.89f,
+    const float C0 = 16.35f, Db0 = 17.32f, D0 = 18.35f, Eb0 = 19.45f,
+                E0 = 20.60f, F0 = 21.83f, Gb0 = 23.12f, G0 = 24.50f,
+                Ab0 = 25.96f, A0 = 27.50f, Bb0 = 29.14f, B0 = 30.87f,
+
+                C1 = 32.70f, Db1 = 34.65f, D1 = 36.71f, Eb1 = 38.89f,
                 E1 = 41.20f, F1 = 43.65f, Gb1 = 46.25f, G1 = 49.00f,
                 Ab1 = 51.91f, A1 = 55.00f, Bb1 = 58.27f, B1 = 61.74f,
 
@@ -38,7 +42,8 @@ namespace Notes
                 Ab8 = 6645.0f, A8 = 7040.0f, Bb8 = 7459.0f, B8 = 7902.0f;
 
     // clang-format off
-    const std::array<float, 12 * 8> ALL_NOTES = {
+    const std::array<float, 12 * 9> ALL_NOTES = {
+        C0, Db0, D0, Eb0, E0, F0, Gb0, G0, Ab0, A0, Bb0, B0,
         C1, Db1, D1, Eb1, E1, F1, Gb1, G1, Ab1, A1, Bb1, B1,
         C2, Db2, D2, Eb2, E2, F2, Gb2, G2, Ab2, A2, Bb2, B2,
         C3, Db3, D3, Eb3, E3, F3, Gb3, G3, Ab3, A3, Bb3, B3,
@@ -51,7 +56,8 @@ namespace Notes
     // clang-format on
 
     // clang-format off
-    const std::array<std::string, 12 * 8> ALL_NOTES_STRINGS = {
+    const std::array<std::string, 12 * 9> ALL_NOTES_STRINGS = {
+        "C0", "Db0", "D0", "Eb0", "E0", "F0", "Gb0", "G0", "Ab0", "A0", "Bb0", "B0",
         "C1", "Db1", "D1", "Eb1", "E1", "F1", "Gb1", "G1", "Ab1", "A1", "Bb1", "B1",
         "C2", "Db2", "D2", "Eb2", "E2", "F2", "Gb2", "G2", "Ab2", "A2", "Bb2", "B2",
         "C3", "Db3", "D3", "Eb3", "E3", "F3", "Gb3", "G3", "Ab3", "A3", "Bb3", "B3",
