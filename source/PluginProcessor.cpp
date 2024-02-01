@@ -19,7 +19,6 @@ PluginProcessor::~PluginProcessor()
     fftwf_destroy_plan (fftw.plan);
     fftwf_free (fftw.in);
     fftwf_free (fftw.out);
-    fftwf_free (fftw.window);
 }
 
 //==============================================================================
@@ -93,16 +92,19 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     juce::ignoreUnused (sampleRate, samplesPerBlock);
     // get the next power of two: https://stackoverflow.com/a/66975605
     size_t n = (size_t) std::bit_ceil ((uint32_t) samplesPerBlock);
+    n = std::max ((size_t) 2048, n);
     // initialize in/out block memory
-    fftw.in_size = n, fftw.out_size = (n / 2 + 1);
+    fftw.in_size = n;
+    fftw.out_size = (n / 2 + 1);
     fftw.in = (float*) fftwf_malloc (sizeof (float) * fftw.in_size);
     fftw.out = (fftwf_complex*) fftwf_malloc (sizeof (fftwf_complex) * fftw.out_size);
     fftw.plan = fftwf_plan_dft_r2c_1d ((int) n, fftw.in, fftw.out, FFTW_MEASURE);
     // create and fill the hann window. weird trick to make it equivalent to scipy sym=False
     // basically a window of length n with sym=False is the same as one of length n+1 with sym=True,
-    // which is the behavior of this function. allocate/free n+1 memory locations, but only use n
-    fftw.window = (float*) fftwf_malloc (sizeof (float) * (n + 1));
-    juce::dsp::WindowingFunction<float>::fillWindowingTables (fftw.window, n + 1, juce::dsp::WindowingFunction<float>::hann, false);
+    // which is the behavior of this function.
+    window.resize (n + 1, 0);
+    juce::dsp::WindowingFunction<float>::fillWindowingTables (window.data(), n + 1, juce::dsp::WindowingFunction<float>::hann, false);
+    window.pop_back();
 }
 
 void PluginProcessor::releaseResources()
@@ -150,31 +152,45 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    const int n = buffer.getNumSamples();
-    float rms = 0.0f; // if small, then likely not actually playing
     const float* leftChannelPointer = buffer.getReadPointer (0);
     const float* rightChannelPointer = buffer.getReadPointer (1);
-    // merge stereo into mono: https://www.dsprelated.com/showthread/comp.dsp/106421-1.php
-    for (int i = 0; i < n; i++)
+
+    for (int i = 0; i < buffer.getNumSamples(); i++)
     {
-        float merged = (leftChannelPointer[i] + rightChannelPointer[i]) / 2;
-        fftw.in[i] = fftw.window[i] * merged;
-        rms += merged;
-    }
+        // circular buffer full
+        if (head == fftw.in_size)
+        {
+            rms = std::sqrtf (rms / fftw.in_size);
+            // circular buffer filled with sound
+            if (rms >= 1e-4)
+            {
+                // apply windowing function
+                for (size_t j = 0; j < fftw.in_size; j++)
+                    fftw.in[j] *= window[j];
 
-    rms = std::sqrtf (rms / n);
-    if (rms >= 1e-4)
-    {
-        // only compute the fft if there's relevant content
-        fftwf_execute_dft_r2c (fftw.plan, fftw.in, fftw.out);
+                fftwf_execute_dft_r2c (fftw.plan, fftw.in, fftw.out);
 
-        // run hps on fftw.out
+                // run hps on fftw.out
 
-        // threshold highest peak
+                // threshold highest peak
 
-        // compare against lookup table
+                // compare against lookup table
 
-        // update UI
+                // update UI
+            }
+
+            // reset
+            head = 0;
+            rms = 0;
+        }
+
+        else
+        {
+            // merge stereo into mono: https://www.dsprelated.com/showthread/comp.dsp/106421-1.php
+            float merged = (leftChannelPointer[i] + rightChannelPointer[i]) / 2;
+            fftw.in[head++] = merged;
+            rms += merged;
+        }
     }
 }
 

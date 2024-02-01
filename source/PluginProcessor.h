@@ -4,6 +4,7 @@
 #include <fftw3.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
+#include <vector>
 
 #if (MSVC)
     #include "ipps.h"
@@ -46,10 +47,15 @@ private:
     {
         fftwf_plan plan;
         float* in;
-        float* window;
         fftwf_complex* out;
         size_t in_size, out_size;
     } fftw;
+
+    float rms;
+    // next index to write to
+    size_t head;
+    // hann window
+    std::vector<float> window;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)
 };
