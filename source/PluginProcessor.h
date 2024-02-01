@@ -44,8 +44,8 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    int fft_size;
-    double sample_rate;
+    size_t fft_size;
+    float sample_rate;
 
     struct fftw_data
     {

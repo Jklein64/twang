@@ -92,8 +92,8 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     // get the next power of two: https://stackoverflow.com/a/66975605
     // size_t n = (size_t) std::bit_ceil ((uint32_t) samplesPerBlock);
     // n = std::max ((size_t) 2048, n);
-    fft_size = 2048;
-    sample_rate = sampleRate;
+    fft_size = (size_t) 2048;
+    sample_rate = (float) sampleRate;
     // initialize in/out block memory
     size_t in_size = fft_size;
     size_t out_size = (fft_size / 2 + 1);
@@ -101,7 +101,7 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     fftw.out.resize (out_size, 0);
     spectrum.resize (out_size, 0);
     // see https://stackoverflow.com/a/75561253 and https://www.fftw.org/fftw3_doc/Complex-numbers.html
-    fftw.plan = fftwf_plan_dft_r2c_1d (fft_size, fftw.in.data(), reinterpret_cast<fftwf_complex*> (fftw.out.data()), FFTW_MEASURE);
+    fftw.plan = fftwf_plan_dft_r2c_1d ((int) fft_size, fftw.in.data(), reinterpret_cast<fftwf_complex*> (fftw.out.data()), FFTW_MEASURE);
     // create and fill the hann window. weird trick to make it equivalent to scipy sym=False
     // basically a window of length n with sym=False is the same as one of length n+1 with sym=True,
     // which is the behavior of this function.
@@ -192,7 +192,7 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
                 }
 
                 // get max peak. can ignore octave errors because I only care about note classification
-                size_t peak = std::distance (spectrum.begin(), std::max_element (spectrum.begin(), spectrum.end()));
+                ptrdiff_t peak = std::distance (spectrum.begin(), std::max_element (spectrum.begin(), spectrum.end()));
                 float frequency = ((float) peak) / fft_size * sample_rate / 2;
 
                 // compare against lookup table
