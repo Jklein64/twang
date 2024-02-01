@@ -199,12 +199,17 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
                 // only continue if frequency is reasonable
                 if (frequency > Notes::C1)
                 {
-                    // compare against lookup table
+                    // find closest note, how far off, and which direction
                     Notes::note_event e = Notes::freq_to_note (frequency);
-                    auto lower = std::min (e.first.frequency, e.second.frequency);
-                    auto higher = std::max (e.first.frequency, e.second.frequency);
-                    printf ("%f < %f < %f\n", lower, frequency, higher);
-                    // printf ("%s (%f), %s (%f)\n", e.first.name.c_str(), e.first.frequency, e.second.name.c_str(), e.second.frequency);
+                    bool swap = e.frequency > frequency;
+                    float f1 = e.frequency / (swap ? std::powf (2, 1 / 12.) : 1);
+                    float f2 = e.frequency * (!swap ? std::powf (2, 1 / 12.) : 1);
+                    float t = 12 * std::log2f (frequency / f1);
+                    // f1 < frequency < f2
+                    printf ("%f < %f < %f", f1, frequency, f2);
+                    printf ("\t %s by %.2f%%\n", swap ? "under" : "over", swap ? (1 - t) * 100 : t * 100);
+                    // float t = 12 * std::log2f (frequency /);
+
                     // update UI
                 }
             }
