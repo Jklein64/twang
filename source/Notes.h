@@ -69,7 +69,24 @@ namespace Notes
     };
     // clang-format on
 
-    inline std::string hz_to_note (float frequency)
+    struct note_event
+    {
+        struct
+        {
+            std::string name;
+            float frequency;
+            float distance;
+        } first;
+
+        struct
+        {
+            std::string name;
+            float frequency;
+            float distance;
+        } second;
+    };
+
+    inline note_event freq_to_note (float frequency)
     {
         float dist0 = std::abs (ALL_NOTES[0] - frequency),
               dist1 = std::abs (ALL_NOTES[1] - frequency);
@@ -101,8 +118,9 @@ namespace Notes
             }
         }
 
-        printf ("%s (%f), %s (%f)\n", ALL_NOTES_STRINGS[i_first].c_str(), first, ALL_NOTES_STRINGS[i_second].c_str(), second);
-
-        return ALL_NOTES_STRINGS[i_first];
+        return {
+            { ALL_NOTES_STRINGS[i_first], ALL_NOTES[i_first], first },
+            { ALL_NOTES_STRINGS[i_second], ALL_NOTES[i_second], second }
+        };
     }
 }
