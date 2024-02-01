@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "Notes.h"
 #include "PluginEditor.h"
 
 //==============================================================================
@@ -89,21 +90,23 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     juce::ignoreUnused (sampleRate, samplesPerBlock);
     // get the next power of two: https://stackoverflow.com/a/66975605
-    size_t n = (size_t) std::bit_ceil ((uint32_t) samplesPerBlock);
-    n = std::max ((size_t) 2048, n);
+    // size_t n = (size_t) std::bit_ceil ((uint32_t) samplesPerBlock);
+    // n = std::max ((size_t) 2048, n);
+    fft_size = 2048;
+    sample_rate = sampleRate;
     // initialize in/out block memory
-    size_t in_size = n;
-    size_t out_size = (n / 2 + 1);
+    size_t in_size = fft_size;
+    size_t out_size = (fft_size / 2 + 1);
     fftw.in.resize (in_size, 0);
     fftw.out.resize (out_size, 0);
     spectrum.resize (out_size, 0);
     // see https://stackoverflow.com/a/75561253 and https://www.fftw.org/fftw3_doc/Complex-numbers.html
-    fftw.plan = fftwf_plan_dft_r2c_1d ((int) n, fftw.in.data(), reinterpret_cast<fftwf_complex*> (fftw.out.data()), FFTW_MEASURE);
+    fftw.plan = fftwf_plan_dft_r2c_1d (fft_size, fftw.in.data(), reinterpret_cast<fftwf_complex*> (fftw.out.data()), FFTW_MEASURE);
     // create and fill the hann window. weird trick to make it equivalent to scipy sym=False
     // basically a window of length n with sym=False is the same as one of length n+1 with sym=True,
     // which is the behavior of this function.
-    window.resize (n + 1, 0);
-    juce::dsp::WindowingFunction<float>::fillWindowingTables (window.data(), n + 1, juce::dsp::WindowingFunction<float>::hann, false);
+    window.resize (fft_size + 1, 0);
+    juce::dsp::WindowingFunction<float>::fillWindowingTables (window.data(), fft_size + 1, juce::dsp::WindowingFunction<float>::hann, false);
     window.pop_back();
 }
 
@@ -179,11 +182,21 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
                     spectrum[j] = std::sqrtf (re * re + im * im);
                 }
 
-                // run hps on fftw.out
+                // run hps. see http://musicweb.ucsd.edu/~trsmyth/analysis/Harmonic_Product_Spectrum.html
+                for (size_t order = 1; order < 5; order++)
+                {
+                    // order means "skipping _ samples after each one"
+                    for (size_t j = 0, k = 0; k < spectrum.size(); j++, k += (order + 1))
+                        // k indexes into the resampled version, j to the original
+                        spectrum[k] *= spectrum[j];
+                }
 
-                // threshold highest peak
+                // get max peak. can ignore octave errors because I only care about note classification
+                size_t peak = std::distance (spectrum.begin(), std::max_element (spectrum.begin(), spectrum.end()));
+                float frequency = ((float) peak) / fft_size * sample_rate / 2;
 
                 // compare against lookup table
+                DBG (Notes::hz_to_note (frequency));
 
                 // update UI
             }
