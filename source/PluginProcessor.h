@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bit>
+#include <complex>
 #include <fftw3.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_dsp/juce_dsp.h>
@@ -46,8 +47,8 @@ private:
     struct fftw_data
     {
         fftwf_plan plan;
-        float* in;
-        fftwf_complex* out;
+        std::vector<float> in;
+        std::vector<std::complex<float>> out;
         size_t in_size, out_size;
     } fftw;
 
