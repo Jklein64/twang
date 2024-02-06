@@ -192,8 +192,7 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
                 }
 
                 // get max reasonable peak. can ignore octave errors because I only care about note classification
-                std::vector<float>::iterator begin = spectrum.begin() + (int) ((Notes::C1 / (sample_rate / 2)) * fft_size);
-                ptrdiff_t peak = std::distance (begin, std::max_element (begin, spectrum.end()));
+                ptrdiff_t peak = std::distance (spectrum.begin(), std::max_element (spectrum.begin(), spectrum.end()));
                 float frequency = ((float) peak) / fft_size * sample_rate / 2;
 
                 // only continue if frequency is reasonable
@@ -206,9 +205,9 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
                     float f2 = e.frequency * (!swap ? std::powf (2, 1 / 12.) : 1);
                     float t = 12 * std::log2f (frequency / f1);
                     // f1 < frequency < f2
-                    printf ("%f < %f < %f", f1, frequency, f2);
-                    printf ("\t %s by %.2f%%\n", swap ? "under" : "over", swap ? (1 - t) * 100 : t * 100);
-                    // float t = 12 * std::log2f (frequency /);
+                    // printf ("%f < %f < %f", f1, frequency, f2);
+                    // printf ("\t %s by %.2f%%\n", swap ? "under" : "over", swap ? (1 - t) * 100 : t * 100);
+                    printf ("%s\n", e.name.c_str());
 
                     // update UI
                 }
