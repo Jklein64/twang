@@ -166,6 +166,8 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
             // circular buffer filled with sound
             if (rms >= 1e-4)
             {
+                playingNote = true;
+
                 // apply windowing function
                 for (size_t j = 0; j < fftw.in.size(); j++)
                     fftw.in[j] *= window[j];
@@ -210,6 +212,12 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
 
                     // update UI
                 }
+            }
+
+            // rms not significant enough; buffer likely silence
+            else
+            {
+                playingNote = false;
             }
 
             // reset

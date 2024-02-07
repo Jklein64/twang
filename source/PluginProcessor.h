@@ -43,6 +43,9 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    // whether a note is playing, based on rms
+    std::atomic<bool> playingNote;
+
 private:
     size_t fft_size;
     int hop_size;
