@@ -94,6 +94,10 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     // n = std::max ((size_t) 2048, n);
     fft_size = (size_t) 2048;
     sample_rate = (float) sampleRate;
+    hop_size = 4 * samplesPerBlock;
+    // achieves min bin resolution to tune a bass guitar (really big though...)
+    // https://electronics.stackexchange.com/a/12408
+    fft_size = (size_t) std::bit_ceil ((uint32_t) (sampleRate / (Notes::E1 - Notes::Eb1)));
     // initialize in/out block memory
     size_t in_size = fft_size;
     size_t out_size = (fft_size / 2 + 1);
