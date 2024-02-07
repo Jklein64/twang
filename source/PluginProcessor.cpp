@@ -88,11 +88,6 @@ void PluginProcessor::changeProgramName (int index, const juce::String& newName)
 //==============================================================================
 void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    juce::ignoreUnused (sampleRate, samplesPerBlock);
-    // get the next power of two: https://stackoverflow.com/a/66975605
-    // size_t n = (size_t) std::bit_ceil ((uint32_t) samplesPerBlock);
-    // n = std::max ((size_t) 2048, n);
-    fft_size = (size_t) 2048;
     sample_rate = (float) sampleRate;
     hop_size = 4 * samplesPerBlock;
     // achieves min bin resolution to tune a bass guitar (really big though...)
@@ -209,16 +204,18 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
                     float f2 = e.frequency * (!swap ? std::powf (2, 1 / 12.) : 1);
                     float t = 12 * std::log2f (frequency / f1);
                     // f1 < frequency < f2
-                    // printf ("%f < %f < %f", f1, frequency, f2);
-                    // printf ("\t %s by %.2f%%\n", swap ? "under" : "over", swap ? (1 - t) * 100 : t * 100);
-                    printf ("%s\n", e.name.c_str());
+                    printf ("%f < %f < %f", f1, frequency, f2);
+                    printf ("\t %s %s by %.2f%%\n", swap ? "under" : "over", e.name.c_str(), swap ? (1 - t) * 100 : t * 100);
+                    // printf ("%s\n", e.name.c_str());
 
                     // update UI
                 }
             }
 
             // reset
-            head = 0;
+            head -= hop_size;
+            // set input array range [h, n) -> [0, n-h), rest will be overwritten
+            memcpy (&fftw.in[0], &fftw.in[hop_size], fft_size - hop_size);
             rms = 0;
         }
 

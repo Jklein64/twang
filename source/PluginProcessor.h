@@ -45,6 +45,7 @@ public:
 
 private:
     size_t fft_size;
+    int hop_size;
     float sample_rate;
 
     struct fftw_data
