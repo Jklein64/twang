@@ -3,6 +3,7 @@
 #include "BinaryData.h"
 #include "PluginProcessor.h"
 #include "TwangLookAndFeel.h"
+#include <string>
 
 //==============================================================================
 class PluginEditor : public juce::AudioProcessorEditor
@@ -14,6 +15,14 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+
+    struct ui_event
+    {
+        // bar activation left to right
+        std::bitset<9> bars;
+        // note without octave number
+        std::string note;
+    };
 
 private:
     // This reference is provided as a quick way for your editor to
