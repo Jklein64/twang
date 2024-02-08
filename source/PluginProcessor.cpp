@@ -202,15 +202,42 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
                     // find closest note, how far off, and which direction
                     Notes::note_event e = Notes::freq_to_note (frequency);
                     bool swap = e.frequency > frequency;
+                    // f1 < frequency < f2
                     float f1 = e.frequency / (swap ? std::powf (2, 1 / 12.) : 1);
                     float f2 = e.frequency * (!swap ? std::powf (2, 1 / 12.) : 1);
+                    // interpolation factor
                     float t = 12 * std::log2f (frequency / f1);
-                    // f1 < frequency < f2
-                    printf ("%f < %f < %f", f1, frequency, f2);
-                    printf ("\t %s %s by %.2f%%\n", swap ? "under" : "over", e.name.c_str(), swap ? (1 - t) * 100 : t * 100);
-                    // printf ("%s\n", e.name.c_str());
 
-                    // update UI
+                    // middle is activated if there is volume
+                    std::bitset<9> bars = 0b000010000;
+                    if (swap)
+                    {
+                        // freq is under note by (1-t)%
+                        if ((1 - t) > 0.2)
+                            bars |= 0b000100000;
+                        if ((t - 1) > 0.4)
+                            bars |= 0b001000000;
+                        if ((t - 1) > 0.6)
+                            bars |= 0b010000000;
+                        if ((t - 1) > 0.8)
+                            bars |= 0b100000000;
+                    }
+                    else
+                    {
+                        // freq is over note by (t)%
+                        if (t > 0.2)
+                            bars |= 0b000001000;
+                        if (t > 0.4)
+                            bars |= 0b000000100;
+                        if (t > 0.6)
+                            bars |= 0b000000010;
+                        if (t > 0.8)
+                            bars |= 0b000000001;
+                    }
+
+                    // set the atomic ui event
+                    uiEvent.bars.store (bars);
+                    uiEvent.note = e.index;
                 }
             }
 

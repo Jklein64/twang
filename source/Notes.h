@@ -71,7 +71,7 @@ namespace Notes
 
     struct note_event
     {
-        std::string name;
+        size_t index;
         float frequency;
         float distance;
     };
@@ -85,7 +85,7 @@ namespace Notes
         }));
 
         return {
-            ALL_NOTES_STRINGS[index],
+            index % 12,
             ALL_NOTES[index],
             ALL_NOTES[index] - frequency
         };

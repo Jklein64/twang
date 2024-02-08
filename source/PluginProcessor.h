@@ -46,6 +46,16 @@ public:
     // whether a note is playing, based on rms
     std::atomic<bool> playingNote;
 
+    struct ui_event
+    {
+        // bar activation left to right
+        std::atomic<std::bitset<9>> bars;
+        // note index; C is 0, B is 11
+        std::atomic<size_t> note;
+    };
+
+    ui_event uiEvent;
+
 private:
     size_t fft_size;
     int hop_size;

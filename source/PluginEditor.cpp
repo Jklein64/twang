@@ -11,11 +11,19 @@ PluginEditor::PluginEditor (PluginProcessor& p) : AudioProcessorEditor (&p), pro
     setOpaque (true);
     setResizable (true, true);
     setLookAndFeel (&twangLookAndFeel);
+    // repaint at 20 Hz
+    startTimerHz (20);
 }
 
 PluginEditor::~PluginEditor()
 {
     setLookAndFeel (nullptr);
+}
+
+// not working for some reason
+void PluginEditor::timerCallback()
+{
+    repaint();
 }
 
 void PluginEditor::paint (juce::Graphics& g)
@@ -126,6 +134,8 @@ void PluginEditor::paint (juce::Graphics& g)
     underline.scaleToFit (x, y, w, h, true);
     g.setColour (Colors::primary);
     g.fillPath (underline);
+
+    printf ("%d\n", processorRef.uiEvent.note.load());
 }
 
 void PluginEditor::resized()
