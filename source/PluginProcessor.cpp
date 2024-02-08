@@ -164,7 +164,7 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
         {
             rms = std::sqrtf (rms / fftw.in.size());
             // circular buffer filled with sound
-            if (rms >= 1e-4)
+            if (rms >= 1e-8)
             {
                 playingNote = true;
 
@@ -201,38 +201,39 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
                 {
                     // find closest note, how far off, and which direction
                     Notes::note_event e = Notes::freq_to_note (frequency);
-                    bool swap = e.frequency > frequency;
-                    // f1 < frequency < f2
-                    float f1 = e.frequency / (swap ? std::powf (2, 1 / 12.) : 1);
-                    float f2 = e.frequency * (!swap ? std::powf (2, 1 / 12.) : 1);
+                    bool isUnder = frequency < e.frequency;
+                    // f1 < frequency < f2, one of f1 or f2 is the closest note
+                    float f1 = e.frequency / (isUnder ? std::powf (2, 1 / 12.) : 1);
+                    float f2 = e.frequency * (!isUnder ? std::powf (2, 1 / 12.) : 1);
                     // interpolation factor
                     float t = 12 * std::log2f (frequency / f1);
 
                     // middle is activated if there is volume
                     std::bitset<9> bars = 0b000010000;
-                    if (swap)
+                    if (isUnder)
                     {
+                        // f1 = e.frequency, f2 = frequency
                         // freq is under note by (1-t)%
+                        if ((1 - t) > 0.1)
+                            bars |= 0b000001000;
                         if ((1 - t) > 0.2)
-                            bars |= 0b000100000;
-                        if ((t - 1) > 0.4)
-                            bars |= 0b001000000;
-                        if ((t - 1) > 0.6)
-                            bars |= 0b010000000;
-                        if ((t - 1) > 0.8)
-                            bars |= 0b100000000;
+                            bars |= 0b000000100;
+                        if ((1 - t) > 0.3)
+                            bars |= 0b000000010;
+                        if ((1 - t) > 0.4)
+                            bars |= 0b000000001;
                     }
                     else
                     {
                         // freq is over note by (t)%
+                        if (t > 0.1)
+                            bars |= 0b000100000;
                         if (t > 0.2)
-                            bars |= 0b000001000;
+                            bars |= 0b001000000;
+                        if (t > 0.3)
+                            bars |= 0b010000000;
                         if (t > 0.4)
-                            bars |= 0b000000100;
-                        if (t > 0.6)
-                            bars |= 0b000000010;
-                        if (t > 0.8)
-                            bars |= 0b000000001;
+                            bars |= 0b100000000;
                     }
 
                     // set the atomic ui event

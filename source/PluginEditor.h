@@ -22,5 +22,7 @@ private:
     // access the processor object that created it.
     PluginProcessor& processorRef;
     TwangLookAndFeel twangLookAndFeel;
+    std::array<float, 9> meterBarPercentRemaining;
+    juce::String noteText = juce::String ("-");
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
 };

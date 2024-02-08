@@ -21,14 +21,27 @@ PluginEditor::~PluginEditor()
     setLookAndFeel (nullptr);
 }
 
-// not working for some reason
 void PluginEditor::timerCallback()
 {
     repaint();
+    for (size_t i = 0; i < 9; i++)
+    {
+        meterBarPercentRemaining[i] -= 0.6;
+        if (meterBarPercentRemaining[i] < 0)
+            meterBarPercentRemaining[i] = 0;
+    }
 }
 
 void PluginEditor::paint (juce::Graphics& g)
 {
+    std::vector<juce::Colour> meterBarFillColors;
+    auto isBarEnabled = processorRef.uiEvent.bars.load();
+    for (size_t i = 0; i < 9; i++)
+        if (processorRef.playingNote.load() && isBarEnabled[i])
+            meterBarPercentRemaining[i] = 1;
+    for (size_t i = 0; i < 9; i++)
+        meterBarFillColors.push_back (Colors::secondary.interpolatedWith (Colors::primary, meterBarPercentRemaining[i]));
+
     // opaque -> must fill background
     g.fillAll (Colors::background);
 
@@ -39,7 +52,6 @@ void PluginEditor::paint (juce::Graphics& g)
     auto borderArea = area.withSizeKeepingCentre (w, h);
     auto x = borderArea.getX(), y = borderArea.getY();
     // start with top left corner bottom section and go clockwise
-    // todo: the path below should be the outer limits
     border.startNewSubPath (x, y + 16);
     border.lineTo (x + 16, y);
     border.lineTo (x + w - 16, y);
@@ -68,7 +80,7 @@ void PluginEditor::paint (juce::Graphics& g)
     leftMeterBar.lineTo (x + 4, y + 8 + 32);
     leftMeterBar.lineTo (x, y + 8 + 32 - 4);
     leftMeterBar.closeSubPath();
-    g.setColour (Colors::secondary);
+    g.setColour (meterBarFillColors[0]);
     g.fillPath (leftMeterBar);
 
     juce::Path meterBar;
@@ -77,7 +89,7 @@ void PluginEditor::paint (juce::Graphics& g)
         if (i == 3)
             continue;
         meterBar.addRectangle (x + 16 + i * (16), y + 8, 8, 32);
-        g.setColour (Colors::secondary);
+        g.setColour (meterBarFillColors[i + 1]);
         g.fillPath (meterBar);
     }
 
@@ -88,7 +100,7 @@ void PluginEditor::paint (juce::Graphics& g)
     rightMeterBar.lineTo (x + w, y + 8 + 32 - 4);
     rightMeterBar.lineTo (x + w - 4, y + 8 + 32);
     rightMeterBar.lineTo (x + w - 8, y + 8 + 32);
-    g.setColour (Colors::secondary);
+    g.setColour (meterBarFillColors[8]);
     g.fillPath (rightMeterBar);
 
     juce::Path centerMeterBar;
@@ -99,10 +111,12 @@ void PluginEditor::paint (juce::Graphics& g)
     centerMeterBar.lineTo (x + w / 2 - 4, y + h - 4);
     centerMeterBar.lineTo (x + w / 2 - 4, y + 4);
     centerMeterBar.closeSubPath();
-    g.setColour (Colors::secondary);
+    g.setColour (meterBarFillColors[4]);
     g.fillPath (centerMeterBar);
 
-    auto noteText = juce::String ("D");
+    // auto noteText = juce::String ("D");
+    if (processorRef.playingNote.load())
+        noteText = juce::String (Notes::index_to_name (processorRef.uiEvent.note.load())->c_str());
     auto textArea = borderArea
                         .withTop (borderArea.getY() + 48)
                         // centers the font a bit better
@@ -135,11 +149,6 @@ void PluginEditor::paint (juce::Graphics& g)
     underline.scaleToFit (x, y, w, h, true);
     g.setColour (Colors::primary);
     g.fillPath (underline);
-
-    if (processorRef.playingNote.load())
-    {
-        printf ("playing a note! (%s) \n", Notes::index_to_name (processorRef.uiEvent.note.load())->c_str());
-    }
 }
 
 void PluginEditor::resized()

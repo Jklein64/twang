@@ -5,10 +5,10 @@
           uiLastY_Normal="257" uiopen_Normal="1">
     <PLUGIN name="AUAudioFilePlayer" format="AudioUnit" category="Generator"
             manufacturer="Apple" version="1.6.0" file="AudioUnit:Generators/augn,afpl,appl"
-            uniqueId="6163676e" isInstrument="0" fileTime="0" infoUpdateTime="18d62dbe518"
+            uniqueId="6163676e" isInstrument="0" fileTime="0" infoUpdateTime="18d89d2f657"
             numInputs="0" numOutputs="2" isShell="0" hasARAExtension="0"
             uid="6163676e"/>
-    <STATE>533.hAGaoMGcv.C1AHv.DTfAGfPBJr.Gc3wGgvUag4VclE1XzUmbkIGUjEFcg8EDarVPUAkbkMWYzAUYxMWZyQWYtQ2TzEFcksTY4c0b0IFc4AWYWYWYxMWZu4FUzkGbk8EDOXVZrUVKxUlYkIWYtMVYyQkag0VYRDFbvwFPgxvzM3vCPDQFXYTZrUlSg0VYWIUYmk1atMmWIM2TkwVYiQWYjYTZrU1WPbxKUMWYxM2KpE1bu41KDUlckw1avUlbuP2cg41YuzVZyM1Ki4xcgYWnRP8DTTgEWfQFZ3kTkcVZu4FQuU1bL81avokTkcVZu4FQgQWXeAADIM2TkwVYiQWYjIUYmk1atokTkcVZu4lSg0VYH7DDvA..........fLauDE..................D....P..............AHv.DTfAGfPBJr.CM3vCA...............................................+++2+C..........Jdp..7++u+WBZ4TY2AhTkcVZu4VBRDlYvwFD.HQX0claQCBDVYTZrUFHwfUUtQWZzwVYjA.B.jA.l.vJ.jD.QAPV.3E.vAPc.nG.6APe.PH.MBPk.PJ.NC.z.jM.nCv7AXP.QDfDATX.FFPjAHY.WFPlA3Y.gF.p........BD..........h...................ADK</STATE>
+    <STATE>1184.hAGaoMGcv.C1AHv.DTfAGfPBJr.M0XyM7vUag4VclE1XzUmbkIGUjEFcg8EDarVPUAkbkMWYzAUYxMWZyQWYtQ2TzEFcksTY4c0b0IFc4AWYWYWYxMWZu4FUzkGbk8EDOXVZrUVKxUlYkIWYtMVYyQkag0VYRDFbvwFPjxfFhnhzM3vCPfkQowVYNEVakckTkcVZu41beAwIuT0bkI2bunVXy8lauPTY1UFauAWYx8Bc2Elam8RaoM2XuLlK2ElcgFA0RLAEUXwEXjgWRU1Yo8laD8VYywzauAmVRU1Yo8laDEFcg8EDPjzbSUFakMFckQlTkcVZu4lVRU1Yo8laNEVakgvSP.G...........xr8RT..................P.....A.............Df.CPPAFb.BInvBLzfCOD...............................................7++e+O..........n3oB.v+++9eInkSkcGHRU1Yo8laR2fCavwWPnxKUMWYxM2KpE1bu41KDU1bqQ2av8RPi8VcyQWZiAxQ0kFcgI2Wx3xcgYWncPsDSPQEV7AFgfvSP.G...........bOwET................A....D................Df.CPPAFb.BInvBLzfCOD...............................................7++e+O.............B.v+++9eInkSkcGHRU1Yo8laR2fCiPxWPnxKUMWYxM2KpE1bu41KDU1bqQ2av8RPi8VcyQWZiAxQ0kFcgI2Wz3xcgYWnkPsDSPQEVbBFofvSP.G...........vFkST..................D....P..............Df.CPPAFb.BInvBLzfCOD...............................................7++e+O.............B.v+++9eInkSkcGHRU1Yo8laS2fCqvRKX3URyMUYrU1XzUFYFkFak8EDp7RUyUlby8hZgM2at8BQkM2Zz8FbuDzXuU2bzk1XfbTcoQWXx8UMtbWX1EpKTKwDTTgEvfgLH7DDvA..........fi7meD.................B....H...............AHv.DTfAGfPBJr.CM3vCA...............................................+++2+C............f..7++u+WBZ4TY2AhTkcVZu4VBRDlYvwFD.HQX0claTiSN5ryHr7vFVYTZrUFHyXkQowVYfPiUFkFakARLVYTZrUFHxfUUtQWZzwVYjA.B.jA.l.vJ.jD.QAPV.3E.vAPc.nG.6A.f.TH.NBfk..L.BCvx.nM.kC.9ALP.DDvcAfW.CF.hATa.2F.vADr.zHPMB.j.EIfbBPm.8IfeBDu.xKP+CPv.SL.PCHz.KM.SC76..OvxCv7.QOvzCf8.gO.5C79.1OP+........BD..........8...................DX.</STATE>
     <LAYOUT>
       <INPUTS/>
       <OUTPUTS>
@@ -35,7 +35,7 @@
           uiLastY_Normal="308" uiopen_Normal="0">
     <PLUGIN name="Twang" format="AudioUnit" category="Effect" manufacturer="Jason Klein"
             version="0.0.1" file="AudioUnit:Effects/aufx,T001,Twng" uniqueId="6132382e"
-            isInstrument="0" fileTime="0" infoUpdateTime="18d62dbe519" numInputs="2"
+            isInstrument="0" fileTime="0" infoUpdateTime="18d89d2f657" numInputs="2"
             numOutputs="2" isShell="0" hasARAExtension="0" uid="6132382e"/>
     <STATE>191.hAGaoMGcv.y0AHv.DTfAGfPBJHwDTTAWsEla0YVXiQWcxUlbTQVXzEFWkwVYsUlaz0hag0VYWMWchQWdvU1U1Ulbyk1atQEc4AWYT4VXsUlDTcmamAjzKvPCPDULQISzN7PTvTURtAWczEsCQX0S0QGb0QmDTACLw.A.RDVclgGVU4FcoQGakQFBWPRJ13iQKAUUVsUWeIFYp0Fc4sGf........AD..........V....................jH</STATE>
     <LAYOUT>
