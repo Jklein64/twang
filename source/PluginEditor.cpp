@@ -1,5 +1,6 @@
 #include "PluginEditor.h"
 #include "Colors.h"
+#include "Notes.h"
 
 PluginEditor::PluginEditor (PluginProcessor& p) : AudioProcessorEditor (&p), processorRef (p)
 {
@@ -135,7 +136,10 @@ void PluginEditor::paint (juce::Graphics& g)
     g.setColour (Colors::primary);
     g.fillPath (underline);
 
-    printf ("%d\n", processorRef.uiEvent.note.load());
+    if (processorRef.playingNote.load())
+    {
+        printf ("playing a note! (%s) \n", Notes::index_to_name (processorRef.uiEvent.note.load())->c_str());
+    }
 }
 
 void PluginEditor::resized()

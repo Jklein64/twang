@@ -90,4 +90,12 @@ namespace Notes
             ALL_NOTES[index] - frequency
         };
     }
+
+    // converts `index` in `[0, 12)` to the corresponding note name
+    inline std::unique_ptr<std::string> index_to_name (size_t index)
+    {
+        auto len = ALL_NOTES_STRINGS[index].length();
+        auto name = std::unique_ptr<std::string> (new std::string (ALL_NOTES_STRINGS[index], 0, len - 1));
+        return name;
+    }
 }
