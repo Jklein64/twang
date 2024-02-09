@@ -80,7 +80,7 @@ namespace Notes
     {
         auto beg = ALL_NOTES.begin(),
              end = ALL_NOTES.end();
-        size_t index = std::distance (beg, std::min_element (beg, end, [frequency] (float a, float b) {
+        size_t index = (size_t) std::distance (beg, std::min_element (beg, end, [frequency] (float a, float b) {
             return std::abs (a - frequency) < std::abs (b - frequency);
         }));
 

@@ -26,7 +26,7 @@ void PluginEditor::timerCallback()
     repaint();
     for (size_t i = 0; i < 9; i++)
     {
-        meterBarPercentRemaining[i] -= 0.6;
+        meterBarPercentRemaining[i] -= 0.6f;
         if (meterBarPercentRemaining[i] < 0)
             meterBarPercentRemaining[i] = 0;
     }
@@ -84,11 +84,11 @@ void PluginEditor::paint (juce::Graphics& g)
     g.fillPath (leftMeterBar);
 
     juce::Path meterBar;
-    for (int i = 0; i < 7; i++)
+    for (size_t i = 0; i < 7; i++)
     {
         if (i == 3)
             continue;
-        meterBar.addRectangle (x + 16 + i * (16), y + 8, 8, 32);
+        meterBar.addRectangle (x + 16 + (float) i * (16), y + 8, 8, 32);
         g.setColour (meterBarFillColors[i + 1]);
         g.fillPath (meterBar);
     }

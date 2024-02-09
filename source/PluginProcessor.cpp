@@ -89,7 +89,7 @@ void PluginProcessor::changeProgramName (int index, const juce::String& newName)
 void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     sample_rate = (float) sampleRate;
-    hop_size = 4 * samplesPerBlock;
+    hop_size = (size_t) (4 * samplesPerBlock);
     // achieves min bin resolution to tune a bass guitar (really big though...)
     // https://electronics.stackexchange.com/a/12408
     fft_size = (size_t) std::bit_ceil ((uint32_t) (sampleRate / (Notes::E1 - Notes::Eb1)));
@@ -203,8 +203,8 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Midi
                     Notes::note_event e = Notes::freq_to_note (frequency);
                     bool isUnder = frequency < e.frequency;
                     // f1 < frequency < f2, one of f1 or f2 is the closest note
-                    float f1 = e.frequency / (isUnder ? std::powf (2, 1 / 12.) : 1);
-                    float f2 = e.frequency * (!isUnder ? std::powf (2, 1 / 12.) : 1);
+                    float f1 = (float) (e.frequency / (isUnder ? std::pow (2, 1 / 12.) : 1));
+                    // float f2 = e.frequency * (!isUnder ? std::powf (2, 1 / 12.) : 1);
                     // interpolation factor
                     float t = 12 * std::log2f (frequency / f1);
 
